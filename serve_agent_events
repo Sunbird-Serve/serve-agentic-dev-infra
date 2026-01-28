@@ -1,0 +1,56 @@
+-- Table: public.serve_agent_events
+
+-- DROP TABLE IF EXISTS public.serve_agent_events;
+
+CREATE TABLE IF NOT EXISTS public.serve_agent_events
+(
+    event_id uuid NOT NULL,
+    session_id uuid NOT NULL,
+    wa_phone text COLLATE pg_catalog."default" NOT NULL,
+    agent_name text COLLATE pg_catalog."default" NOT NULL,
+    state text COLLATE pg_catalog."default",
+    sub_state text COLLATE pg_catalog."default",
+    event_type text COLLATE pg_catalog."default" NOT NULL,
+    event_source text COLLATE pg_catalog."default" NOT NULL,
+    event_status text COLLATE pg_catalog."default",
+    details jsonb,
+    occurred_at timestamp without time zone NOT NULL DEFAULT now(),
+    CONSTRAINT serve_agent_events_pkey PRIMARY KEY (event_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.serve_agent_events
+    OWNER to serve_agentic_user;
+-- Index: idx_agent_events_phone
+
+-- DROP INDEX IF EXISTS public.idx_agent_events_phone;
+
+CREATE INDEX IF NOT EXISTS idx_agent_events_phone
+    ON public.serve_agent_events USING btree
+    (wa_phone COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: idx_agent_events_session
+
+-- DROP INDEX IF EXISTS public.idx_agent_events_session;
+
+CREATE INDEX IF NOT EXISTS idx_agent_events_session
+    ON public.serve_agent_events USING btree
+    (session_id ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: idx_agent_events_time
+
+-- DROP INDEX IF EXISTS public.idx_agent_events_time;
+
+CREATE INDEX IF NOT EXISTS idx_agent_events_time
+    ON public.serve_agent_events USING btree
+    (occurred_at ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: idx_agent_events_type
+
+-- DROP INDEX IF EXISTS public.idx_agent_events_type;
+
+CREATE INDEX IF NOT EXISTS idx_agent_events_type
+    ON public.serve_agent_events USING btree
+    (event_type COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
